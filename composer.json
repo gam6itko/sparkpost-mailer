@@ -1,0 +1,27 @@
+{
+    "name": "gam6itko/sparkpost-mailer",
+    "type": "symfony-bridge",
+    "description": "Symfony SparkPost Mailer Bridge",
+    "keywords": ["symfony", "mailer", "sparkpost"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alexander Strizhak",
+            "email": "gam6itko@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "symfony/mailer": "^4.4|^5.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.4",
+        "symfony/http-client": "^4.4|^5.0"
+    },
+    "autoload": {
+        "psr-4": {"Gam6itko\\Symfony\\Mailer\\SparkPost\\": "src"}
+    },
+    "autoload-dev": {
+        "psr-4": {"Gam6itko\\Symfony\\Mailer\\SparkPost\\Test\\": "tests"}
+    }
+}
