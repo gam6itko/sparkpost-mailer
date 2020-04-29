@@ -49,6 +49,8 @@ class SparkPostApiTransport extends AbstractApiTransport
             ]));
         }
 
+        $this->getLogger()->debug('SparkPostApiTransport send', $payload);
+
         return $this->client->request('POST', 'https://api.sparkpost.com/api/v1/transmissions/', [
             'headers' => [
                 'Authorization' => $this->key,

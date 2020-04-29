@@ -15,6 +15,9 @@ use Symfony\Component\Mime\RawMessage;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
+/**
+ * @coversDefaultClass \Gam6itko\Symfony\Mailer\SparkPost\Transport\SparkPostApiTransport
+ */
 class SparkPostApiTransportTest extends TestCase
 {
     /**

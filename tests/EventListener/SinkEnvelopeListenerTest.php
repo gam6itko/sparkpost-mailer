@@ -9,6 +9,9 @@ use Symfony\Component\Mailer\Event\MessageEvent;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\RawMessage;
 
+/**
+ * @coversDefaultClass \Gam6itko\Symfony\Mailer\SparkPost\EventListener\SinkEnvelopeListener
+ */
 class SinkEnvelopeListenerTest extends TestCase
 {
     public function testSinkEmail()
