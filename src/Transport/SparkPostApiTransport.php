@@ -49,7 +49,7 @@ class SparkPostApiTransport extends AbstractApiTransport
             ]));
         }
 
-        $this->getLogger()->debug('SparkPostApiTransport send', $payload);
+        $this->log($payload);
 
         return $this->client->request('POST', 'https://api.sparkpost.com/api/v1/transmissions/', [
             'headers' => [
@@ -118,5 +118,17 @@ class SparkPostApiTransport extends AbstractApiTransport
         }
 
         return $result;
+    }
+
+    private function log(array $payload)
+    {
+        if (isset($payload['content']['attachments']) && is_array($payload['content']['attachments'])) {
+            foreach ($payload['content']['attachments'] as &$attachment) {
+                if (isset($attachment['data']) && strlen($attachment['data']) > 100) {
+                    $attachment['data'] = '<<<truncated>>>';
+                }
+            }
+        }
+        $this->getLogger()->debug('SparkPostApiTransport send', $payload);
     }
 }

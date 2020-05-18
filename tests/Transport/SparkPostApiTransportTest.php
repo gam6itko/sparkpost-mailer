@@ -7,6 +7,7 @@ use Gam6itko\Symfony\Mailer\SparkPost\Mime\SparkPostEmail;
 use Gam6itko\Symfony\Mailer\SparkPost\Mime\TemplateEmail;
 use Gam6itko\Symfony\Mailer\SparkPost\Transport\SparkPostApiTransport;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\DelayedEnvelope;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mime\Address;
@@ -195,6 +196,33 @@ JSON;
             new DelayedEnvelope($email),
             $json,
         ];
+    }
 
+    public function testTruncateAttachemtData()
+    {
+        $message = (new Email())
+            ->from('sender@mail.com')
+            ->to('recipient@mail.com')
+            ->subject('Test email')
+            ->text('Test email for you!')
+            ->attach(str_pad('', 200, 'A'), 'name.txt');
+        $envelope = new Envelope(new Address('gam6itko@gmail.com'), [new Address('fabien@symfony.com')]);
+
+        $client = $this->createMock(HttpClientInterface::class);
+        $client
+            ->expects(self::once())
+            ->method('request');
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects(self::once())
+            ->method('debug')
+            ->willReturnCallback(static function (string $message, array $context) {
+                self::assertTrue(isset($context['content']['attachments']));
+                self::assertCount(1, $context['content']['attachments']);
+                self::assertSame('<<<truncated>>>', $context['content']['attachments'][0]['data']);
+            });
+        $transport = new SparkPostApiTransport('api-key', $client, null, $logger);
+        $transport->send($message, $envelope);
     }
 }
