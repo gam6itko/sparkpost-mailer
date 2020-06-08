@@ -29,7 +29,7 @@ class SparkPostApiTransport extends AbstractApiTransport
 
     public function __toString(): string
     {
-        return sprintf('sparkpost+api://%s', $this->getEndpoint());
+        return 'sparkpost+api://';
     }
 
     protected function doSendApi(SentMessage $sentMessage, Email $email, Envelope $envelope): ResponseInterface
@@ -58,11 +58,6 @@ class SparkPostApiTransport extends AbstractApiTransport
             ],
             'json'    => $payload,
         ]);
-    }
-
-    private function getEndpoint(): ?string
-    {
-        return $this->host.($this->port ? ':'.$this->port : '');
     }
 
     private function buildRecipients(Envelope $envelope): array

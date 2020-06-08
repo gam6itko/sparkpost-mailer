@@ -1,4 +1,6 @@
 # SparkPost transport for Symfony Mailer
+[![Build Status](https://travis-ci.com/gam6itko/sparkpost-mailer.svg?branch=master)](https://travis-ci.com/gam6itko/sparkpost-mailer)
+[![Coverage Status](https://coveralls.io/repos/github/gam6itko/sparkpost-mailer/badge.svg?branch=master)](https://coveralls.io/github/gam6itko/sparkpost-mailer?branch=master)
 
 ## install
 

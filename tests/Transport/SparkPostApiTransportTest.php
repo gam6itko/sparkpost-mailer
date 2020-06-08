@@ -198,7 +198,7 @@ JSON;
         ];
     }
 
-    public function testTruncateAttachemtData()
+    public function testTruncateAttachemntData()
     {
         $message = (new Email())
             ->from('sender@mail.com')
@@ -224,5 +224,12 @@ JSON;
             });
         $transport = new SparkPostApiTransport('api-key', $client, null, $logger);
         $transport->send($message, $envelope);
+    }
+
+    public function testToString()
+    {
+        $client = $this->createMock(HttpClientInterface::class);
+        $transport = new SparkPostApiTransport('api-key', $client);
+        self::assertSame('sparkpost+api://', (string) $transport);
     }
 }

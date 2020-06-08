@@ -2,6 +2,7 @@
 
 namespace Gam6itko\Symfony\Mailer\SparkPost\Test\EventListener;
 
+use DG\BypassFinals;
 use Gam6itko\Symfony\Mailer\SparkPost\EventListener\SinkEnvelopeListener;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mailer\Envelope;
@@ -32,5 +33,18 @@ class SinkEnvelopeListenerTest extends TestCase
         ], array_map(static function (Address $address): string {
             return $address->getAddress();
         }, $envelope->getRecipients()));
+    }
+
+    public function testNoPrefix()
+    {
+        BypassFinals::enable();
+
+        $messageEvent = $this->createMock(MessageEvent::class);
+        $messageEvent
+            ->expects(self::never())
+            ->method('getEnvelope');
+
+        $listener = new SinkEnvelopeListener('');
+        $listener->onMessage($messageEvent);
     }
 }
