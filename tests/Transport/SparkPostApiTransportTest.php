@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Gam6itko\Symfony\Mailer\SparkPost\Test\Transport;
 
@@ -125,18 +125,18 @@ JSON;
             ->setCampaignId('christmas_campaign')
             ->setDescription('Christmas Campaign Email')
             ->setOptions([
-                "click_tracking" => false,
-                "transactional"  => true,
-                "ip_pool"        => "my_ip_pool",
-                "inline_css"     => true,
+                'click_tracking' => false,
+                'transactional'  => true,
+                'ip_pool'        => 'my_ip_pool',
+                'inline_css'     => true,
             ])
             ->setMetadata([
-                "user_type"       => "students",
-                "education_level" => "college",
+                'user_type'       => 'students',
+                'education_level' => 'college',
             ])
             ->setSubstitutionData([
-                "sender"       => "Big Store Team",
-                "holiday_name" => "Christmas",
+                'sender'       => 'Big Store Team',
+                'holiday_name' => 'Christmas',
             ]);
         yield [
             $email,
@@ -166,7 +166,7 @@ JSON;
         $email = (new TemplateEmail('black_friday', true))
             ->to(Address::fromString('Wilma Flintstone <wilma@flintstone.com>'))
             ->setSubstitutionData([
-                "discount" => "25%",
+                'discount' => '25%',
             ]);
         yield [
             $email,

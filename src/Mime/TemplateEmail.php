@@ -1,8 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Gam6itko\Symfony\Mailer\SparkPost\Mime;
-
-use Symfony\Component\Mime\Exception\LogicException;
 
 class TemplateEmail extends SparkPostEmail
 {
