@@ -5,6 +5,7 @@ namespace Gam6itko\Symfony\Mailer\SparkPost\Transport;
 use Gam6itko\Symfony\Mailer\SparkPost\Mime\SparkPostEmail;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mailer\Exception\HttpTransportException;
 use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mailer\Transport\AbstractApiTransport;
 use Symfony\Component\Mime\Email;
@@ -51,13 +52,17 @@ class SparkPostApiTransport extends AbstractApiTransport
 
         $this->log($payload);
 
-        return $this->client->request('POST', 'https://api.sparkpost.com/api/v1/transmissions/', [
+        $response = $this->client->request('POST', 'https://api.sparkpost.com/api/v1/transmissions/', [
             'headers' => [
                 'Authorization' => $this->key,
                 'Content-Type'  => 'application/json',
             ],
             'json'    => $payload,
         ]);
+
+        $this->handleError($response);
+
+        return $response;
     }
 
     private function buildRecipients(Envelope $envelope): array
@@ -125,5 +130,24 @@ class SparkPostApiTransport extends AbstractApiTransport
             }
         }
         $this->getLogger()->debug('SparkPostApiTransport send', $payload);
+    }
+
+    /**
+     * @throws HttpTransportException
+     */
+    private function handleError(ResponseInterface $response): void
+    {
+        if (200 === $response->getStatusCode()) {
+            return;
+        }
+
+        $data = json_decode($response->getContent(false), true);
+        $this->getLogger()->error('SparkPostApiTransport error response', $data);
+        $error = $data['errors'][0] ?? null;
+        if (empty($error)) {
+            return;
+        }
+
+        throw new HttpTransportException("[{$error['code']}] {$error['message']}. {$error['description']}.", $response);
     }
 }

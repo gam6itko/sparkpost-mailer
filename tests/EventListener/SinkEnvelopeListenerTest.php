@@ -15,6 +15,11 @@ use Symfony\Component\Mime\RawMessage;
  */
 class SinkEnvelopeListenerTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        BypassFinals::enable();
+    }
+
     public function testSinkEmail()
     {
         $envelope = new Envelope(Address::fromString('test case <nobody@nowhere.net>'), [
@@ -37,8 +42,6 @@ class SinkEnvelopeListenerTest extends TestCase
 
     public function testNoPrefix()
     {
-        BypassFinals::enable();
-
         $messageEvent = $this->createMock(MessageEvent::class);
         $messageEvent
             ->expects(self::never())
