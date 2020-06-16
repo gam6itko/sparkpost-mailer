@@ -257,25 +257,14 @@ JSON;
         self::assertSame('sparkpost+api://', (string) $transport);
     }
 
-    public function testNotSuccess(): void
+    /**
+     * @dataProvider dataNotSuccess
+     */
+    public function testNotSuccess(array $error, string $message): void
     {
         self::expectException(HttpTransportException::class);
-        self::expectExceptionMessage('[1902] Message generation rejected. Blocked Sending Domain <domain.com>.');
+        self::expectExceptionMessage($message);
 
-        $error = [
-            'errors'  => [
-                [
-                    'message'     => 'Message generation rejected',
-                    'description' => 'Blocked Sending Domain <domain.com>',
-                    'code'        => '1902',
-                ],
-            ],
-            'results' => [
-                'total_rejected_recipients' => 0,
-                'total_accepted_recipients' => 1,
-                'id'                        => '012345678901234567',
-            ],
-        ];
         $response = $this->createMock(ResponseInterface::class);
         $response
             ->expects(self::atLeastOnce())
@@ -299,5 +288,40 @@ JSON;
 
         $transport = new SparkPostApiTransport('api-key', $client, null, $logger);
         $transport->send($this->createDefaultMessage(), $this->createDefaultEnvelope());
+    }
+
+    public function dataNotSuccess()
+    {
+        yield [
+            [
+                'errors'  => [
+                    [
+                        'message'     => 'Message generation rejected',
+                        'description' => 'Blocked Sending Domain <domain.com>',
+                        'code'        => '1902',
+                    ],
+                ],
+                'results' => [
+                    'total_rejected_recipients' => 0,
+                    'total_accepted_recipients' => 1,
+                    'id'                        => '012345678901234567',
+                ],
+            ],
+            '[{"message":"Message generation rejected","description":"Blocked Sending Domain <domain.com>","code":"1902"}]',
+        ];
+
+        yield [
+            [
+                'errors' => [
+                    [
+                        'message' => 'error 0',
+                    ],
+                    [
+                        'message' => 'error 1',
+                    ],
+                ],
+            ],
+            '[{"message":"error 0"},{"message":"error 1"}]',
+        ];
     }
 }

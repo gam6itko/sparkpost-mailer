@@ -143,11 +143,7 @@ class SparkPostApiTransport extends AbstractApiTransport
 
         $data = json_decode($response->getContent(false), true);
         $this->getLogger()->error('SparkPostApiTransport error response', $data);
-        $error = $data['errors'][0] ?? null;
-        if (empty($error)) {
-            return;
-        }
 
-        throw new HttpTransportException("[{$error['code']}] {$error['message']}. {$error['description']}.", $response);
+        throw new HttpTransportException(json_encode($data['errors']), $response, $response->getStatusCode());
     }
 }
