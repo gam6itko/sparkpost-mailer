@@ -80,4 +80,22 @@ class SparkPostEmail extends Email
 
         return $this;
     }
+
+    /**
+     * @internal
+     */
+    public function __serialize(): array
+    {
+        return [$this->campaignId, $this->description, $this->options, $this->content, parent::__serialize()];
+    }
+
+    /**
+     * @internal
+     */
+    public function __unserialize(array $data): void
+    {
+        [$this->campaignId, $this->description, $this->options, $this->content, $parentData] = $data;
+
+        parent::__unserialize($parentData);
+    }
 }
