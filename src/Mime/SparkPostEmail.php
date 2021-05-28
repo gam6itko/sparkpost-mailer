@@ -86,7 +86,15 @@ class SparkPostEmail extends Email
      */
     public function __serialize(): array
     {
-        return [$this->campaignId, $this->description, $this->options, $this->content, parent::__serialize()];
+        return [
+            $this->campaignId,
+            $this->description,
+            $this->options,
+            $this->content,
+            $this->substitutionData,
+            $this->metadata,
+            parent::__serialize(),
+        ];
     }
 
     /**
@@ -94,7 +102,15 @@ class SparkPostEmail extends Email
      */
     public function __unserialize(array $data): void
     {
-        [$this->campaignId, $this->description, $this->options, $this->content, $parentData] = $data;
+        [
+            $this->campaignId,
+            $this->description,
+            $this->options,
+            $this->content,
+            $this->substitutionData,
+            $this->metadata,
+            $parentData,
+        ] = $data;
 
         parent::__unserialize($parentData);
     }

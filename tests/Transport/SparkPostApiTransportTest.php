@@ -44,6 +44,7 @@ class SparkPostApiTransportTest extends TestCase
             ->expects(self::atLeastOnce())
             ->method('getStatusCode')
             ->willReturn(200);
+
         return $response;
     }
 

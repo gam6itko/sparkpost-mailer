@@ -21,8 +21,10 @@ trait HasSubstitutionDataTrait
         return $this;
     }
 
-    public function addSubstitutionData(string $key, $value)
+    public function addSubstitutionData(string $key, $value): self
     {
         $this->substitutionData[$key] = $value;
+
+        return $this;
     }
 }
