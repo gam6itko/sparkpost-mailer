@@ -8,9 +8,12 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class SparkPostSmtpTransport extends EsmtpTransport
 {
-    public function __construct(string $username, string $password, int $port = null, EventDispatcherInterface $dispatcher = null, LoggerInterface $logger = null)
+    public function __construct(string $username, string $password, int $port = null, EventDispatcherInterface $dispatcher = null, LoggerInterface $logger = null, ?string $region = null, string $host = 'default')
     {
-        parent::__construct('smtp.sparkpostmail.com', $port ?: 587, false, $dispatcher, $logger);
+        if ('default' === $host) {
+            $host = \sprintf('smtp%s.sparkpostmail.com', $region ? '.'.$region : '');
+        }
+        parent::__construct($host, $port ?: 587, false, $dispatcher, $logger);
 
         $this->setUsername($username);
         $this->setPassword($password);
