@@ -21,16 +21,21 @@ class SparkPostApiTransport extends AbstractApiTransport
      */
     private $key;
 
-    public function __construct(string $key, HttpClientInterface $client = null, EventDispatcherInterface $dispatcher = null, LoggerInterface $logger = null)
+    public function __construct(string $key, HttpClientInterface $client = null, EventDispatcherInterface $dispatcher = null, LoggerInterface $logger = null, ?string $region = null, string $host = 'default')
     {
         $this->key = $key;
+
+        if ('default' === $host) {
+            $host = \sprintf('api%s.sparkpost.com', $region ? '.'.$region : '');
+        }
+        $this->host = $host;
 
         parent::__construct($client, $dispatcher, $logger);
     }
 
     public function __toString(): string
     {
-        return 'sparkpost+api://';
+        return \sprintf('sparkpost+api://%s', $this->host);
     }
 
     protected function doSendApi(SentMessage $sentMessage, Email $email, Envelope $envelope): ResponseInterface
@@ -52,13 +57,17 @@ class SparkPostApiTransport extends AbstractApiTransport
 
         $this->log($payload);
 
-        $response = $this->client->request('POST', 'https://api.sparkpost.com/api/v1/transmissions/', [
-            'headers' => [
-                'Authorization' => $this->key,
-                'Content-Type'  => 'application/json',
-            ],
-            'json'    => $payload,
-        ]);
+        $response = $this->client->request(
+            'POST',
+            \sprintf('https://%s/api/v1/transmissions/', $this->host),
+            [
+                'headers' => [
+                    'Authorization' => $this->key,
+                    'Content-Type'  => 'application/json',
+                ],
+                'json'    => $payload,
+            ]
+        );
 
         $this->handleError($response);
 

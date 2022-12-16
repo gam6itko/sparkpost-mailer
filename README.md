@@ -2,15 +2,15 @@
 [![Build Status](https://travis-ci.com/gam6itko/sparkpost-mailer.svg?branch=master)](https://travis-ci.com/gam6itko/sparkpost-mailer)
 [![Coverage Status](https://coveralls.io/repos/github/gam6itko/sparkpost-mailer/badge.svg?branch=master)](https://coveralls.io/github/gam6itko/sparkpost-mailer?branch=master)
 
-## install
+## Installation
 
 ```bash
 composer require gam6itko/sparkpost-mailer
 ```
 
-## configuration
+## Configuration
 
-services.yaml
+### services.yaml
 ```yaml
 services:
     mailer.transport_factory.sparkpost:
@@ -20,7 +20,10 @@ services:
             - {name: mailer.transport_factory}
 ```
 
-.env
+### .env
+
+#### Default region
+
 ```dotenv
 MAILER_DSN=sparkpost+api://api_key@default
 ```
@@ -28,10 +31,19 @@ MAILER_DSN=sparkpost+api://api_key@default
 MAILER_DSN=sparkpost+smtp://user:password@default:port
 ```
 
-## tests
+#### EU region
+
+```dotenv
+MAILER_DSN=sparkpost+api://api_key@default?region=eu
+```
+```dotenv
+MAILER_DSN=sparkpost+smtp://user:password@default:port?region=eu
+```
+
+## Tests
 
 ### Using sink server 
-[About sink server](https://www.sparkpost.com/docs/faq/using-sink-server/)
+[About sink server](https://support.sparkpost.com/docs/faq/using-sink-server)
 
 ```yaml
 services:
@@ -41,4 +53,4 @@ services:
 
 ## Also
 
-[Api transmissions](https://developers.sparkpost.com/api/transmissions/)
+[Sparkpost's "transmissions" API reference](https://developers.sparkpost.com/api/transmissions/)

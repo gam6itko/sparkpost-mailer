@@ -14,15 +14,17 @@ class SparkPostTransportFactory extends AbstractTransportFactory
         $scheme = $dsn->getScheme();
         $user = $this->getUser($dsn);
         $port = $dsn->getPort();
+        $region = $dsn->getOption('region');
 
-        if ('sparkpost+api' === $scheme) {
-            return new SparkPostApiTransport($user, $this->client, $this->dispatcher, $this->logger);
-        }
+        switch (true) {
+            case 'sparkpost+api' === $scheme:
+                return new SparkPostApiTransport($user, $this->client, $this->dispatcher, $this->logger, $region, $dsn->getHost());
 
-        if (in_array($scheme, ['sparkpost', 'sparkpost+smtp', 'sparkpost+smtps'])) {
-            $password = $this->getPassword($dsn);
-
-            return new SparkPostSmtpTransport($user, $password, $port, $this->dispatcher, $this->logger);
+            case 'sparkpost' === $scheme:
+            case 'sparkpost+smtp' === $scheme:
+            case 'sparkpost+smtps' === $scheme:
+                $password = $this->getPassword($dsn);
+                return new SparkPostSmtpTransport($user, $password, $port, $this->dispatcher, $this->logger, $region, $dsn->getHost());
         }
 
         throw new UnsupportedSchemeException($dsn, 'sparkpost', $this->getSupportedSchemes());
