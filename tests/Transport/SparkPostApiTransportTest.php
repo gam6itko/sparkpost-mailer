@@ -251,11 +251,14 @@ JSON;
         $transport->send($this->createDefaultMessage(), $this->createDefaultEnvelope());
     }
 
-    public function testToString()
+    /**
+     * @dataProvider dataToString
+     */
+    public function testToString(?string $region, ?string $host, string $endpoint)
     {
         $client = $this->createMock(HttpClientInterface::class);
-        $transport = new SparkPostApiTransport('api-key', $client);
-        self::assertSame('sparkpost+api://', (string) $transport);
+        $transport = new SparkPostApiTransport('api-key', $client, null, null, $region, $host);
+        self::assertSame('sparkpost+api://' . $endpoint, (string) $transport);
     }
 
     /**
@@ -323,6 +326,25 @@ JSON;
                 ],
             ],
             '[{"message":"error 0"},{"message":"error 1"}]',
+        ];
+    }
+
+    public function dataToString(): iterable
+    {
+        yield [
+            null, 'default', 'api.sparkpost.com',
+        ];
+
+        yield [
+            'eu', 'default', 'api.eu.sparkpost.com',
+        ];
+
+        yield [
+            'eu', 'example.com', 'example.com',
+        ];
+
+        yield [
+            null, 'example.com', 'example.com',
         ];
     }
 }
