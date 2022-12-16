@@ -27,12 +27,27 @@ class SparkPostTransportFactoryTest extends TransportFactoryTestCase
         ];
 
         yield [
+            new Dsn('sparkpost', 'example.com'),
+            true,
+        ];
+
+        yield [
             new Dsn('sparkpost+api', 'default'),
             true,
         ];
 
         yield [
+            new Dsn('sparkpost+api', 'example.com'),
+            true,
+        ];
+
+        yield [
             new Dsn('sparkpost+https', 'default'),
+            false,
+        ];
+
+        yield [
+            new Dsn('sparkpost+https', 'example.com'),
             false,
         ];
 
@@ -64,19 +79,46 @@ class SparkPostTransportFactoryTest extends TransportFactoryTestCase
         ];
 
         yield [
+            new Dsn('sparkpost+api', 'default', self::USER, null, null, ['region' => 'eu']),
+            new SparkPostApiTransport(self::USER, $client, $dispatcher, $logger, 'eu'),
+        ];
+
+        yield [
+            new Dsn('sparkpost+api', 'example.com', self::USER),
+            new SparkPostApiTransport(self::USER, $client, $dispatcher, $logger, null, 'example.com'),
+        ];
+
+        yield [
+            new Dsn('sparkpost+api', 'example.com', self::USER, null, null, ['region' => 'eu']),
+            new SparkPostApiTransport(self::USER, $client, $dispatcher, $logger, 'eu', 'example.com'),
+        ];
+
+        yield [
             new Dsn('sparkpost', 'default', self::USER, self::PASSWORD),
             new SparkPostSmtpTransport(self::USER, self::PASSWORD, null, $dispatcher, $logger),
         ];
 
-        yield [
-            new Dsn('sparkpost+smtp', 'default', self::USER, self::PASSWORD, 587),
-            new SparkPostSmtpTransport(self::USER, self::PASSWORD, 587, $dispatcher, $logger),
-        ];
+        foreach (['sparkpost', 'sparkpost+smtp', 'sparkpost+smtps'] as $scheme) {
+            yield [
+                new Dsn($scheme, 'default', self::USER, self::PASSWORD, null, ['region' => 'eu']),
+                new SparkPostSmtpTransport(self::USER, self::PASSWORD, null, $dispatcher, $logger, 'eu'),
+            ];
 
-        yield [
-            new Dsn('sparkpost+smtps', 'default', self::USER, self::PASSWORD, 2525),
-            new SparkPostSmtpTransport(self::USER, self::PASSWORD, 2525, $dispatcher, $logger),
-        ];
+            yield [
+                new Dsn($scheme, 'example.com', self::USER, self::PASSWORD),
+                new SparkPostSmtpTransport(self::USER, self::PASSWORD, null, $dispatcher, $logger, null, 'example.com'),
+            ];
+
+            yield [
+                new Dsn($scheme, 'example.com', self::USER, self::PASSWORD, null, ['region' => 'eu']),
+                new SparkPostSmtpTransport(self::USER, self::PASSWORD, null, $dispatcher, $logger, 'eu', 'example.com'),
+            ];
+
+            yield [
+                new Dsn($scheme, 'example.com', self::USER, self::PASSWORD, 1111, ['region' => 'eu']),
+                new SparkPostSmtpTransport(self::USER, self::PASSWORD, 1111, $dispatcher, $logger, 'eu', 'example.com'),
+            ];
+        }
     }
 
     public function unsupportedSchemeProvider(): iterable
