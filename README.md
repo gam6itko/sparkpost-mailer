@@ -10,7 +10,7 @@ composer require gam6itko/sparkpost-mailer
 
 ## configuration
 
-services.yaml
+### services.yaml
 ```yaml
 services:
     mailer.transport_factory.sparkpost:
@@ -20,12 +20,24 @@ services:
             - {name: mailer.transport_factory}
 ```
 
-.env
+### .env
+
+#### Default region
+
 ```dotenv
 MAILER_DSN=sparkpost+api://api_key@default
 ```
 ```dotenv
 MAILER_DSN=sparkpost+smtp://user:password@default:port
+```
+
+#### EU region
+
+```dotenv
+MAILER_DSN=sparkpost+api://api_key@default?region=eu
+```
+```dotenv
+MAILER_DSN=sparkpost+smtp://user:password@default:port?region=eu
 ```
 
 ## tests
