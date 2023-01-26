@@ -13,13 +13,13 @@
     "require": {
         "php": ">=7.1",
         "ext-json": "*",
-        "symfony/mailer": "^4.4|^5.0"
+        "symfony/mailer": "^4.4|^5.0|^6.0"
     },
     "require-dev": {
         "dg/bypass-finals": "^1.2",
         "php-coveralls/php-coveralls": "^2.2",
         "phpunit/phpunit": "^7.4||^8.0||^9.0",
-        "symfony/http-client": "^4.4|^5.0"
+        "symfony/http-client": "^4.4|^5.0|^6.0"
     },
     "autoload": {
         "psr-4": {"Gam6itko\\Symfony\\Mailer\\SparkPost\\": "src"}
