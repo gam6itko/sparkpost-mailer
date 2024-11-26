@@ -105,7 +105,9 @@ class SparkPostApiTransport extends AbstractApiTransport
             'subject'     => $email->getSubject(),
             'text'        => $email->getTextBody(),
             'html'        => $email->getHtmlBody(),
-            'replyTo'     => $email->getReplyTo(),
+            'reply_to'     => implode(',', array_map(function ($replyTo) {
+                return $replyTo->toString();
+            }, $email->getReplyTo())),
             'attachments' => $this->buildAttachments($email),
         ]);
     }
