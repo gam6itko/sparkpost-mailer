@@ -108,6 +108,36 @@ JSON;
 
         $json = <<<JSON
 {
+    "recipients": [
+        {
+            "address": {
+                "email": "fabien@symfony.com"
+            }
+        }
+    ],
+    "content": {
+        "from": {
+            "email": "gam6itko@gmail.com"
+        },
+        "subject": "Test email",
+        "text": "Test email for you!",
+        "reply_to": "no-reply@mail.com,\"Gam6itko\" <gam6itko+no-reply@gmail.com>,no-reply2@mail.com,\"Fabien\" <fabien+no-reply@symfony.com>"
+    }
+}
+JSON;
+        yield [
+            (new Email())
+                ->from('sender@mail.com')
+                ->to('recipient@mail.com')
+                ->replyTo('no-reply@mail.com', new Address('gam6itko+no-reply@gmail.com', 'Gam6itko'), 'no-reply2@mail.com', new Address('fabien+no-reply@symfony.com', 'Fabien'))
+                ->subject('Test email')
+                ->text('Test email for you!'),
+            new Envelope(new Address('gam6itko@gmail.com'), [new Address('fabien@symfony.com')]),
+            $json,
+        ];
+
+        $json = <<<JSON
+{
   "options": {
     "click_tracking": false,
     "transactional": true,
