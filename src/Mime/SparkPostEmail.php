@@ -29,7 +29,7 @@ class SparkPostEmail extends Email
      */
     private $content;
 
-    public function ensureValidity()
+    public function ensureValidity(): void
     {
     }
 

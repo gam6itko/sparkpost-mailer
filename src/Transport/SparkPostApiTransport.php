@@ -21,7 +21,7 @@ class SparkPostApiTransport extends AbstractApiTransport
      */
     private $key;
 
-    public function __construct(string $key, HttpClientInterface $client = null, EventDispatcherInterface $dispatcher = null, LoggerInterface $logger = null, ?string $region = null, string $host = 'default')
+    public function __construct(string $key, ?HttpClientInterface $client = null, ?EventDispatcherInterface $dispatcher = null, ?LoggerInterface $logger = null, ?string $region = null, string $host = 'default')
     {
         $this->key = $key;
 
